@@ -7,10 +7,12 @@ import tiles
 class Game:
 
     def __init__(self):
-        self.width = 864
-        self.height = 576
+        self.size = self.width, self.height = (864, 576)  
+        self.trueSize = (288, 192)
+        
 
         self.win = pygame.display.set_mode((self.width, self.height))
+        
 
 
         self.dungeonTileset = pygame.image.load(os.path.join("assets","Dungeon_Tileset.png"))
@@ -32,12 +34,17 @@ class Game:
 
     def draw(self):
         BLACK = pygame.Color(0,0,0)
-        self.win.fill(BLACK)
+        #self.win.fill(BLACK)
 
-        self.drawGrid(48)
+        #self.drawGrid(48)
+
+        sur = pygame.Surface(self.trueSize)
+
         for x in range(10):
             for y in range(10):
-                tiles.Tileset.draw(tiles.Dungeon, self.win, (x*16,y*16), (x,y))
+                tiles.Tileset.draw(tiles.Dungeon, sur, (x*16,y*16), (x,y))
+
+        self.win.blit(pygame.transform.scale(sur, self.size), (0, 0))
 
         pygame.display.update()
 
