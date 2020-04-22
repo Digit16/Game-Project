@@ -17,6 +17,7 @@ class Game:
 
         self.dungeonTileset = pygame.image.load(os.path.join("assets","Dungeon_Tileset.png"))
         self.map = []
+        self.temp = []
 
     def run(self):
         run = True
@@ -27,6 +28,9 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    pos = self.scaleMouse(pygame.mouse.get_pos())
+                    self.temp.append(pos)
             
             self.draw()
 
@@ -44,10 +48,14 @@ class Game:
             for y in range(10):
                 tiles.Tileset.draw(tiles.Dungeon, sur, (x*16,y*16), (x,y))
 
-        self.win.blit(pygame.transform.scale(sur, self.size), (0, 0))
+        for pos in self.temp:
+            sur.fill((255,0,0), (pos, (1,1)))
 
+        self.win.blit(pygame.transform.scale(sur, self.size), (0, 0))
         pygame.display.update()
 
+    def scaleMouse(self, pos):
+        return [int(pos[i] * self.trueSize[i] / self.size[i]) for i in range(2)]
 
     def drawGrid(self, size = 16):
         for x in range(1, self.width // size+1):
